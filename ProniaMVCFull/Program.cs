@@ -14,8 +14,13 @@ namespace ProniaMVCFull
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
             });
             var app = builder.Build();
-
-            //app.MapGet("/", () => "Hello World!");
+            app.UseRouting();
+             
+                app.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
+                );
+            
             app.MapDefaultControllerRoute();
             app.UseStaticFiles();
             app.Run();

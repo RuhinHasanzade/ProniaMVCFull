@@ -1,0 +1,36 @@
+﻿<div class="container">
+    <div class="row">
+        <form method="post" asp-controller = "Benefit" asp-action="Create" >
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text"
+                       class="form-control"
+                       id="title"
+                       name="title"
+                       placeholder="Enter title">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text"
+                       class="form-control"
+                       id="description"
+                       name="description"
+                       placeholder="Enter description">
+            </div>
+
+            <div class="form-group">
+                <label for="iconUrl">Icon URL</label>
+                <input type="text"
+                       class="form-control"
+                       id="iconUrl"
+                       name="iconUrl"
+                       placeholder="Enter icon URL">
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>

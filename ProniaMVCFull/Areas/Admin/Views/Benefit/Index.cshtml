@@ -1,0 +1,39 @@
+﻿@model List<Benefit>
+
+<div class="container">
+    <div class="row">
+
+        <div class="row">
+            <a class="btn btn-success col-2" asp-action ="Create">Create + </a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">IconUrl</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (Benefit benefit in Model)
+                {
+                    <tr>
+                        <th scope="row">@benefit.Id</th>
+                        <td>@benefit.Title</td>
+                        <td>@benefit.Description</td>
+                        <td><img src="~/assets//images/shipping/icon/@benefit.IconUrl" width="30" height="30" alt="Alternate Text" /></td>
+                        <td>
+                            <a class="btn btn-warning">Update</a>
+                            <a class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
