@@ -1,0 +1,41 @@
+﻿@model Benefit
+
+<div class="container">
+    <div class="row">
+        <form method="post" asp-controller="Benefit" asp-action="Update">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text"
+                       class="form-control"
+                       id="title"
+                       asp-for="Title"
+                       placeholder="Enter title">
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text"
+                       class="form-control"
+                       id="description"
+                       asp-for="Description"
+                       placeholder="Enter description">
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="iconUrl">Icon URL</label>
+                <input type="text"
+                       class="form-control"
+                       id="iconUrl"
+                       asp-for="IconUrl"
+                       placeholder="Enter icon URL">
+                <span asp-validation-for="IconUrl" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
