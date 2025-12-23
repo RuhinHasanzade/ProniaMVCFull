@@ -1,4 +1,6 @@
-﻿<div class="container">
+﻿@model Benefit
+
+<div class="container">
     <div class="row">
         <form method="post" asp-controller = "Benefit" asp-action="Create" >
             <div class="form-group">
@@ -6,8 +8,9 @@
                 <input type="text"
                        class="form-control"
                        id="title"
-                       name="title"
+                       asp-for = "Title"
                        placeholder="Enter title">
+                       <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -15,8 +18,9 @@
                 <input type="text"
                        class="form-control"
                        id="description"
-                       name="description"
+                       asp-for="Description"
                        placeholder="Enter description">
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -24,8 +28,9 @@
                 <input type="text"
                        class="form-control"
                        id="iconUrl"
-                       name="iconUrl"
+                       asp-for="IconUrl"
                        placeholder="Enter icon URL">
+                <span asp-validation-for="IconUrl" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-primary">

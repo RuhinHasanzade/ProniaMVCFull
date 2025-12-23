@@ -4,7 +4,7 @@
     <div class="row">
 
         <div class="row">
-            <a class="btn btn-success col-2" asp-action ="Create">Create + </a>
+            <a class="btn btn-success col-2" asp-action ="Create">Create +</a>
         </div>
         <table class="table table-striped">
             <thead>
@@ -27,7 +27,7 @@
                         <td><img src="~/assets//images/shipping/icon/@benefit.IconUrl" width="30" height="30" alt="Alternate Text" /></td>
                         <td>
                             <a class="btn btn-warning">Update</a>
-                            <a class="btn btn-danger">Delete</a>
+                            <a asp-action = "Delete" asp-route-id= "@benefit.Id" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 }

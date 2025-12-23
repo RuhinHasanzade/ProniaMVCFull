@@ -19,7 +19,31 @@ public class BenefitController(AppDbContext _context) : Controller
     [HttpPost]
     public IActionResult Create(Benefit benefit)
     {
+
+        
+        if (ModelState.IsValid == false)
+        {
+            return View();
+        }
+
+       
         _context.Benefits.Add(benefit);
+        _context.SaveChanges();
+
+        return RedirectToAction("Index");
+    }
+
+
+    public IActionResult Delete(int id)
+    {
+        Benefit benefit = _context.Benefits.Find(id);
+
+        if (benefit is null)
+        {
+            return NotFound();
+        }
+
+        _context.Benefits.Remove(benefit);
         _context.SaveChanges();
 
         return RedirectToAction("Index");
