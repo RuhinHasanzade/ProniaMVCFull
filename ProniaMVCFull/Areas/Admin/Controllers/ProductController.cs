@@ -40,11 +40,37 @@ public class ProductController(AppDbContext _context) : Controller
 
 
     [HttpGet]
-    public IActionResult Update()
+    public IActionResult Update(int id)
     {
-        return View();
+        var product = _context.Products.Find(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+        ViewBag.Categories = _context.Categories.ToList();
+        return View(product);
     }
 
+
+    [HttpPost]
+    public IActionResult Update(Product product)
+    {
+        var updateProduct = _context.Products.Find(product.Id);
+        if (updateProduct == null)
+        {
+            return NotFound();
+        }
+        updateProduct.Name = product.Name;
+        updateProduct.Description = product.Description;
+        updateProduct.SKU = product.SKU;
+        updateProduct.Price = product.Price;
+        updateProduct.CategoryId = product.CategoryId;
+        updateProduct.MainImgUrl = product.MainImgUrl;
+        updateProduct.HoverImgUrl = product.HoverImgUrl;
+        _context.Products.Update(updateProduct);
+        _context.SaveChanges();
+        return RedirectToAction(nameof(Index));
+    }
 
     public IActionResult Delete(int id)
     {
