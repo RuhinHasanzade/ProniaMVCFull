@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProniaMVCFull.Context;
 
 namespace ProniaMVCFull.Controllers
 {
-    public class ShopController : Controller
+    public class ShopController(AppDbContext _context) : Controller
     {
+
         public IActionResult Index()
         {
-            return View();
+            List<Product> products = _context.Products.ToList();
+            return View(products);
         }
     }
 }

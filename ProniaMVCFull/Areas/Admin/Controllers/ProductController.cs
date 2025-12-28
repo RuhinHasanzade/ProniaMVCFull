@@ -33,6 +33,16 @@ public class ProductController(AppDbContext _context) : Controller
             return View();
         }
 
+        string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{product.Image.FileName}";
+        //string folderPath
+        using FileStream stream = new(folderPathMain, FileMode.Create);
+
+
+
+        product.Image.CopyTo(stream);
+
+        product.MainImgUrl = product.Image.FileName;
+
         _context.Products.Add(product);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));

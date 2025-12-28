@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProniaMVCFull.Models.Common;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProniaMVCFull.Models
 {
@@ -18,7 +19,11 @@ namespace ProniaMVCFull.Models
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
 
-        [Required]
+        [NotMapped]
+        public IFormFile Image { get; set; }
+
+        [NotMapped]
+        public IFormFile HoverImage { get; set; }
         public string? MainImgUrl { get; set; }
 
         [Required]
