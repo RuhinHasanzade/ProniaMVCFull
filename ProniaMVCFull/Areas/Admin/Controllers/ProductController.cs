@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProniaMVCFull.Context;
+using ProniaMVCFull.ViewModels.ProductViewModels;
 
 namespace ProniaMVCFull.Areas.Admin.Controllers;
 [Area("Admin")]
@@ -30,7 +31,7 @@ public class ProductController(AppDbContext _context) : Controller
         if (ModelState.IsValid == false)
         {
             ViewBag.Categories = _context.Categories.ToList();
-            return View();
+            return View(product);
         }
 
         string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{product.Image.FileName}";
@@ -97,6 +98,27 @@ public class ProductController(AppDbContext _context) : Controller
     }
 
 
+    public IActionResult Detail(int id)
+    {
+        var product = _context.Products.Select(x => new ProductGetVm()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            SKU = x.SKU,
+            Price = x.Price,
+            HoverImageUrl = x.HoverImgUrl,
+            MainImageUrl = x.MainImgUrl,
+            TagNames = x.ProductTags.Select(x => x.Tag.Name).ToList()
+        }).FirstOrDefault(x=> x.Id == id);
 
+        if(product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+
+    }
     
 }

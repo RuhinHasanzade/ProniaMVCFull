@@ -15,6 +15,10 @@ namespace ProniaMVCFull.Context
 
         public DbSet<ProductImage> ProductImages { get; set; }
 
+        public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<ProductTag> ProductTags { get; set; }
+
     }
 
 }

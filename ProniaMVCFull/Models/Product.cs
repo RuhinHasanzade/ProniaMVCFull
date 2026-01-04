@@ -22,12 +22,14 @@ namespace ProniaMVCFull.Models
         [NotMapped]
         public IFormFile Image { get; set; }
 
-        [NotMapped]
-        public IFormFile HoverImage { get; set; }
+        //[NotMapped]
+        //public IFormFile HoverImage { get; set; }
         public string? MainImgUrl { get; set; }
 
         [Required]
         public string? HoverImgUrl { get; set; }
+
+        public ICollection<ProductTag> ProductTags { get; set; }
 
 
     }
