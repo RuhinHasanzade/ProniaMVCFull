@@ -20,29 +20,54 @@ public class ProductController(AppDbContext _context) : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        ViewBag.Categories = _context.Categories.ToList();
+        SendSelectedDataWithViewBag();
         return View();
     }
 
 
     [HttpPost]
-    public IActionResult Create(Product product)
+    public IActionResult Create(ProductCreateVm productCreateDto)
     {
         if (ModelState.IsValid == false)
         {
-            ViewBag.Categories = _context.Categories.ToList();
-            return View(product);
+            SendSelectedDataWithViewBag();
+            return View(productCreateDto);
         }
+        var product = new Product
+        {
+            Name = productCreateDto.Name,
+            Price = productCreateDto.Price,
+            Description = productCreateDto.Description,
+            SKU = productCreateDto.SKU,
+            CategoryId = productCreateDto.CategoryId,
+            HoverImgUrl = productCreateDto.HoverImgUrl,
+            MainImgUrl = productCreateDto.Image.FileName,
+            ProductTags = []
+        };
 
-        string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{product.Image.FileName}";
+        string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{productCreateDto.Image.FileName}";
         //string folderPath
         using FileStream stream = new(folderPathMain, FileMode.Create);
 
+        productCreateDto.Image.CopyTo(stream);
 
+        foreach (var tagId in productCreateDto.TagIds)
+        {
+            var isExistTag = _context.Tags.Any(x => x.Id == tagId);
 
-        product.Image.CopyTo(stream);
-
-        product.MainImgUrl = product.Image.FileName;
+            if (isExistTag is false)
+            {
+                SendSelectedDataWithViewBag();
+                ModelState.AddModelError("", "Bu tag movcud deyl!!");
+                return View(productCreateDto);
+            }
+            ProductTag productTag = new()
+            {
+                TagId = tagId,
+                Product = product,
+            };
+            product.ProductTags.Add(productTag);
+        }
 
         _context.Products.Add(product);
         _context.SaveChanges();
@@ -53,13 +78,24 @@ public class ProductController(AppDbContext _context) : Controller
     [HttpGet]
     public IActionResult Update(int id)
     {
-        var product = _context.Products.Find(id);
+        var product = _context.Products.Include(x=> x.ProductTags).FirstOrDefault(x=> x.Id == id);
         if (product == null)
         {
             return NotFound();
         }
-        ViewBag.Categories = _context.Categories.ToList();
-        return View(product);
+        SendSelectedDataWithViewBag();
+
+        ProductUpdateVm vm = new()
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            CategoryId = product.CategoryId,
+            Price = product.Price,
+            SKU = product.SKU,
+            TagIds = product.ProductTags.Select(x => x.TagId).ToList(),
+        };
+        return View(vm);
     }
 
 
@@ -121,4 +157,9 @@ public class ProductController(AppDbContext _context) : Controller
 
     }
     
+    private void SendSelectedDataWithViewBag()
+    {
+        ViewBag.Categories = _context.Categories.ToList();
+        ViewBag.Tags = _context.Tags.ToList();
+    } 
 }

@@ -1,38 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProniaMVCFull.Models.Common;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProniaMVCFull.Models
+namespace ProniaMVCFull.ViewModels.ProductViewModels
 {
-    public class Product : BaseEntity
+    public class ProductCreateVm
     {
         [Required]
         public string Name { get; set; }
 
         [Required]
-        [Precision(10,2)]
+        [Precision(10, 2)]
         public decimal Price { get; set; }
+
         public string? Description { get; set; }
         public string? SKU { get; set; }
+
         [Required]
         public int CategoryId { get; set; }
 
+        [Required(ErrorMessage = "Please select at least one tag.")]
         public List<int> TagIds { get; set; } = new List<int>();
-        public Category? Category { get; set; }
-
-        [NotMapped]
-        public IFormFile Image { get; set; }
-
-        //[NotMapped]
-        //public IFormFile HoverImage { get; set; }
-        public string? MainImgUrl { get; set; }
 
         [Required]
-        public string? HoverImgUrl { get; set; }
+        public IFormFile Image { get; set; }
 
-        public ICollection<ProductTag> ProductTags { get; set; }
-
-
+        [Required]
+        public string HoverImgUrl { get; set; }
     }
+
 }
