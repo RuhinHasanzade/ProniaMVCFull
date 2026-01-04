@@ -100,20 +100,53 @@ public class ProductController(AppDbContext _context) : Controller
 
 
     [HttpPost]
-    public IActionResult Update(Product product)
+    public IActionResult Update(ProductUpdateVm vm)
     {
-        var updateProduct = _context.Products.Find(product.Id);
+        var updateProduct = _context.Products
+        .Include(p => p.ProductTags)
+        .FirstOrDefault(p => p.Id == vm.Id);
         if (updateProduct == null)
         {
             return NotFound();
         }
-        updateProduct.Name = product.Name;
-        updateProduct.Description = product.Description;
-        updateProduct.SKU = product.SKU;
-        updateProduct.Price = product.Price;
-        updateProduct.CategoryId = product.CategoryId;
-        updateProduct.MainImgUrl = product.MainImgUrl;
-        updateProduct.HoverImgUrl = product.HoverImgUrl;
+
+        foreach (var tagId in vm.TagIds)
+        {
+            var isExistTag = _context.Tags.Any(x => x.Id == tagId);
+
+            if (isExistTag is false)
+            {
+                SendSelectedDataWithViewBag();
+                ModelState.AddModelError("", "Bu tag movcud deyl!!");
+                return View(vm);
+            }
+            
+        }
+
+
+        updateProduct.Name = vm.Name;
+        updateProduct.Description = vm.Description;
+        updateProduct.SKU = vm.SKU;
+        updateProduct.Price = vm.Price;
+        updateProduct.CategoryId = vm.CategoryId;
+        //updateProduct.MainImgUrl = vm.MainImage?.Name;
+        //updateProduct.HoverImgUrl = vm.HoverImage;
+        if (vm.MainImage != null)
+            updateProduct.MainImgUrl = vm.MainImage.FileName;
+
+        if (!string.IsNullOrEmpty(vm.HoverImage))
+            updateProduct.HoverImgUrl = vm.HoverImage;
+
+        _context.ProductTags.RemoveRange(updateProduct.ProductTags);
+        foreach (var tagId in vm.TagIds)
+        {
+            ProductTag productTag = new ()
+            {
+                TagId = tagId,
+                ProductId = updateProduct.Id
+            };
+            updateProduct.ProductTags.Add(productTag);
+        }
         _context.Products.Update(updateProduct);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));
