@@ -6,7 +6,7 @@ using ProniaMVCFull.ViewModels.ProductViewModels;
 namespace ProniaMVCFull.Areas.Admin.Controllers;
 [Area("Admin")]
 
-public class ProductController(AppDbContext _context) : Controller
+public class ProductController(AppDbContext _context , IWebHostEnvironment _envoriement) : Controller
 {
     public IActionResult Index()
     {
@@ -33,6 +33,32 @@ public class ProductController(AppDbContext _context) : Controller
             SendSelectedDataWithViewBag();
             return View(productCreateDto);
         }
+
+        if(!productCreateDto.Image.ContentType.Contains("image"))
+        {
+            SendSelectedDataWithViewBag();
+            ModelState.AddModelError("Image", "Yalniz sekil tipli data dagil etmek olar");
+            return View(productCreateDto);
+        }
+
+
+        if(productCreateDto.Image.Length >  2 * Math.Pow(2,20))
+        {
+            SendSelectedDataWithViewBag();
+            ModelState.AddModelError("Image", "Maximum 2 MB sekil yuklemek olar!");
+            return View(productCreateDto);
+        }
+
+        foreach (var image in productCreateDto.Images)
+        {
+            //if (image.CheckImage("image"))
+            //{
+
+            //}
+        }
+
+        string uniqueFileName = Guid.NewGuid().ToString() + productCreateDto.Image.FileName;
+
         var product = new Product
         {
             Name = productCreateDto.Name,
@@ -41,15 +67,18 @@ public class ProductController(AppDbContext _context) : Controller
             SKU = productCreateDto.SKU,
             CategoryId = productCreateDto.CategoryId,
             HoverImgUrl = productCreateDto.HoverImgUrl,
-            MainImgUrl = productCreateDto.Image.FileName,
+            MainImgUrl = uniqueFileName,
             ProductTags = []
         };
 
-        string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{productCreateDto.Image.FileName}";
-        //string folderPath
-        using FileStream stream = new(folderPathMain, FileMode.Create);
+        
 
+        //string folderPathMain = @$"C:\Users\ASUS\source\repos\ProniaMVCFull\ProniaMVCFull\wwwroot\assets\images\website-images\{uniqueFileName}";
+        string folderPathMain = Path.Combine(_envoriement.WebRootPath, "assets", "images", "website-images", uniqueFileName);
+        using FileStream stream = new(folderPathMain, FileMode.Create);
         productCreateDto.Image.CopyTo(stream);
+
+        
 
         foreach (var tagId in productCreateDto.TagIds)
         {
@@ -162,6 +191,8 @@ public class ProductController(AppDbContext _context) : Controller
 
         _context.Products.Remove(product);
         _context.SaveChanges();
+
+        System.IO.File.Delete("");
 
         return RedirectToAction(nameof(Index));
     }

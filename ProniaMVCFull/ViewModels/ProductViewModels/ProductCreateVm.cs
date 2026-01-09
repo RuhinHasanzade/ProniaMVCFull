@@ -26,6 +26,8 @@ namespace ProniaMVCFull.ViewModels.ProductViewModels
 
         [Required]
         public string HoverImgUrl { get; set; }
+
+        public List<IFormFile> Images { get; set; } = [];
     }
 
 }
