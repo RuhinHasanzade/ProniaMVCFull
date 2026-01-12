@@ -191,8 +191,10 @@ public class ProductController(AppDbContext _context , IWebHostEnvironment _envo
 
         _context.Products.Remove(product);
         _context.SaveChanges();
-
-        System.IO.File.Delete("");
+        string filePth = Path.Combine(_envoriement.WebRootPath, "assets", "images", "website-images", product.MainImgUrl);
+        
+        if(System.IO.File.Exists(filePth)) 
+           System.IO.File.Delete(filePth);
 
         return RedirectToAction(nameof(Index));
     }
